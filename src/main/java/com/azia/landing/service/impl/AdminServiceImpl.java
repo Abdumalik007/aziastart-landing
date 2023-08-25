@@ -1,0 +1,75 @@
+package com.azia.landing.service.impl;
+
+import com.azia.landing.dao.Admin;
+import com.azia.landing.dao.User;
+import com.azia.landing.dto.AdminDto;
+import com.azia.landing.dto.UserDto;
+import com.azia.landing.mapper.AdminMapper;
+import com.azia.landing.repository.AdminRepository;
+import com.azia.landing.repository.UserRepository;
+import com.azia.landing.service.main.AdminService;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+import static com.azia.landing.helper.ResponseEntityHelper.INTERNAL_ERROR;
+import static com.azia.landing.helper.ResponseEntityHelper.NOT_FOUND;
+
+@RequiredArgsConstructor
+@Service
+public class AdminServiceImpl implements AdminService {
+
+    public static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
+    private final AdminRepository adminRepository;
+    private final AdminMapper adminMapper;
+    private final PasswordEncoder encoder;
+
+
+
+    @Override
+    public ResponseEntity<?> updateAdmin(AdminDto adminDto) {
+        try {
+            Optional<Admin> optional = adminRepository.findById(adminDto.getId());
+            if(optional.isEmpty())
+                return NOT_FOUND();
+
+            Admin admin = optional.get();
+            admin.setFirstName(adminDto.getFirstName());
+            admin.setLastName(adminDto.getLastName());
+
+            updateAdminUser(adminDto, admin);
+
+            adminRepository.save(admin);
+            return ResponseEntity.ok(adminDto);
+        }catch (Exception e){
+            logger.error("Error while updating a admin".concat(e.getMessage()));
+            return INTERNAL_ERROR();
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<?> findAdminById(Integer id) {
+        Optional<Admin> optional = adminRepository.findById(id);
+        if(optional.isPresent()) return ResponseEntity.ok(adminMapper.toDto(optional.get()));
+        return NOT_FOUND();
+    }
+
+
+
+    private void updateAdminUser(AdminDto adminDto, Admin admin){
+        User user = admin.getUser();
+        UserDto userDto = adminDto.getUser();
+        user.setEmail(adminDto.getUser().getEmail());
+        if(userDto.getPassword() != null)
+            user.setPassword(encoder.encode(userDto.getPassword()));
+        admin.setUser(user);
+    }
+
+}
+
