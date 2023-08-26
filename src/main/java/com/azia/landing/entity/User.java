@@ -1,4 +1,4 @@
-package com.azia.landing.dao;
+package com.azia.landing.entity;
 
 
 import com.azia.landing.role.Role;

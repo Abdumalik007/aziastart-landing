@@ -1,12 +1,11 @@
 package com.azia.landing.service.impl;
 
-import com.azia.landing.dao.Admin;
-import com.azia.landing.dao.User;
+import com.azia.landing.entity.Admin;
+import com.azia.landing.entity.User;
 import com.azia.landing.dto.AdminDto;
 import com.azia.landing.dto.UserDto;
 import com.azia.landing.mapper.AdminMapper;
 import com.azia.landing.repository.AdminRepository;
-import com.azia.landing.repository.UserRepository;
 import com.azia.landing.service.main.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

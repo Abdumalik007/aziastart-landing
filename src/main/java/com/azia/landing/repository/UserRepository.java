@@ -1,6 +1,6 @@
 package com.azia.landing.repository;
 
-import com.azia.landing.dao.User;
+import com.azia.landing.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

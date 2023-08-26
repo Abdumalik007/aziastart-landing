@@ -2,7 +2,7 @@ package com.azia.landing.mapper;
 
 
 
-import com.azia.landing.dao.User;
+import com.azia.landing.entity.User;
 import com.azia.landing.dto.UserDto;
 import org.mapstruct.Mapper;
 

@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.azia</groupId>
-    <artifactId>landing</artifactId>
+    <artifactId>aziastart-landing</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>landing</name>
+    <name>aziastart-landing</name>
     <description>landing</description>
     <properties>
         <java.version>17</java.version>

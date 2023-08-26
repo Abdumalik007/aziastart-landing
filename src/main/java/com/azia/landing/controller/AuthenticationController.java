@@ -28,7 +28,6 @@ public class AuthenticationController {
         return userService.logout(request);
     }
 
-
 }
 
 

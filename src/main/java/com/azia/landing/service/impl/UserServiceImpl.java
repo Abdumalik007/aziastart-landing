@@ -1,6 +1,6 @@
 package com.azia.landing.service.impl;
 
-import com.azia.landing.dao.User;
+import com.azia.landing.entity.User;
 import com.azia.landing.dto.custom.LoginRequest;
 import com.azia.landing.dto.custom.LoginResponse;
 import com.azia.landing.redis.UserSession;

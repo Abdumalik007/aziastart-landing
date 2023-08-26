@@ -1,6 +1,6 @@
 package com.azia.landing.redis;
 
-import com.azia.landing.dao.User;
+import com.azia.landing.entity.User;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;

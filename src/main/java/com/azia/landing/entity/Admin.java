@@ -1,4 +1,4 @@
-package com.azia.landing.dao;
+package com.azia.landing.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,6 +1,6 @@
 package com.azia.landing.security.jwt;
 
-import com.azia.landing.dao.User;
+import com.azia.landing.entity.User;
 import com.azia.landing.redis.UserSession;
 import com.azia.landing.redis.UserSessionRedisRepository;
 import io.micrometer.common.lang.NonNull;

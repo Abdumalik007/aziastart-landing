@@ -1,6 +1,6 @@
 package com.azia.landing.mapper;
 
-import com.azia.landing.dao.Admin;
+import com.azia.landing.entity.Admin;
 import com.azia.landing.dto.AdminDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
