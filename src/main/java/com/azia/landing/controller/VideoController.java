@@ -5,6 +5,7 @@ import com.azia.landing.entity.Video;
 import com.azia.landing.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.azia.landing.helper.ResponseEntityHelper.NOT_FOUND;
@@ -12,6 +13,7 @@ import static com.azia.landing.helper.ResponseEntityHelper.NOT_FOUND;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/video")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class VideoController {
     private final VideoRepository videoRepository;
 

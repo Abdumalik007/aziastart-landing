@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.Date;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 import static com.azia.landing.helper.ResponseEntityHelper.*;
 
 
@@ -20,15 +22,16 @@ import static com.azia.landing.helper.ResponseEntityHelper.*;
 @Service
 public class ApplicantServiceImpl implements ApplicantService {
     public static final Logger logger = LoggerFactory.getLogger(ApplicantServiceImpl.class);
-    private final ApplicantRepository ApplicantRepository;
-    private final ApplicantMapper ApplicantMapper;
+    private final ApplicantRepository applicantRepository;
+    private final ApplicantMapper applicantMapper;
 
     @Override
     public ResponseEntity<?> createApplicant(ApplicantDto ApplicantDto) {
         try {
-            Applicant Applicant = ApplicantMapper.toEntity(ApplicantDto);
-            ApplicantRepository.save(Applicant);
-            ApplicantDto.setId(Applicant.getId());
+            Applicant applicant = applicantMapper.toEntity(ApplicantDto);
+            applicant.setCreatedAt(LocalDate.now());
+            applicantRepository.save(applicant);
+            ApplicantDto.setId(applicant.getId());
             return OK_MESSAGE();
         } catch (Exception e){
             logger.error("Error while creating student info: ".concat(e.getMessage()));
@@ -38,16 +41,16 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     public ResponseEntity<?> findApplicantById(Integer id) {
-        Optional<Applicant> optional = ApplicantRepository.findById(id);
-        if(optional.isPresent()) return ResponseEntity.ok(ApplicantMapper.toDto(optional.get()));
+        Optional<Applicant> optional = applicantRepository.findById(id);
+        if(optional.isPresent()) return ResponseEntity.ok(applicantMapper.toDto(optional.get()));
         return NOT_FOUND();
     }
 
     @Override
-    public ResponseEntity<?> findApplicantByDate(Date from, Date to) {
+    public ResponseEntity<?> findApplicantByDate(LocalDate from, LocalDate to) {
         try {
-            List<ApplicantDto> studentsInfo = ApplicantRepository.findAllByCreatedAtBetween(from, to)
-                    .stream().map(ApplicantMapper::toDto).toList();
+            List<ApplicantDto> studentsInfo = applicantRepository.findAllByCreatedAtBetweenOrderByCreatedAt(from, to)
+                    .stream().map(applicantMapper::toDto).toList();
             return ResponseEntity.ok(studentsInfo);
         }catch (Exception e){
             logger.error("Error while getting students info between two dates: ".concat(e.getMessage()));
@@ -57,19 +60,19 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     public ResponseEntity<?> findAll() {
-        List<ApplicantDto> studentsInfo = ApplicantRepository.findAll()
-                .stream().map(ApplicantMapper::toDto).toList();
+        List<ApplicantDto> studentsInfo = applicantRepository.findByOrderByCreatedAt()
+                .stream().map(applicantMapper::toDto).toList();
         return ResponseEntity.ok(studentsInfo);
     }
 
 
     @Override
     public ResponseEntity<?> deleteApplicantById(Integer id) {
-        Optional<Applicant> ApplicantOptional = ApplicantRepository.findById(id);
+        Optional<Applicant> ApplicantOptional = applicantRepository.findById(id);
         try {
             if(ApplicantOptional.isEmpty())
                 return NOT_FOUND();
-            ApplicantRepository.delete(ApplicantOptional.get());
+            applicantRepository.delete(ApplicantOptional.get());
             return OK_MESSAGE();
         }catch (Exception e){
             logger.error("Error while removing student info: ".concat(e.getMessage()));

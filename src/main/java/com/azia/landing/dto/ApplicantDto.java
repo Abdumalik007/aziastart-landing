@@ -20,5 +20,4 @@ public class ApplicantDto {
     private String level;
     @NotBlank(message = "Phone number must not be blank")
     private String phoneNumber;
-    private Date createdAt;
 }

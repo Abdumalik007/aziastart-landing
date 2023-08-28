@@ -19,12 +19,10 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<?> updateAdmin(@RequestBody AdminDto adminDto){
         return adminService.updateAdmin(adminDto);
     }
-
-
     @GetMapping("/{id}")
     public ResponseEntity<?> findAdminById(@PathVariable Integer id){
         return adminService.findAdminById(id);
