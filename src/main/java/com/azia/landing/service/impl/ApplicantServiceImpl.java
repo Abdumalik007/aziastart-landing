@@ -34,7 +34,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             ApplicantDto.setId(applicant.getId());
             return OK_MESSAGE();
         } catch (Exception e){
-            logger.error("Error while creating student info: ".concat(e.getMessage()));
+            logger.error("Error while creating applicants: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
@@ -49,20 +49,20 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public ResponseEntity<?> findApplicantByDate(LocalDate from, LocalDate to) {
         try {
-            List<ApplicantDto> studentsInfo = applicantRepository.findAllByCreatedAtBetweenOrderByCreatedAt(from, to)
+            List<ApplicantDto> applicants = applicantRepository.findAllByCreatedAtBetweenOrderByCreatedAt(from, to)
                     .stream().map(applicantMapper::toDto).toList();
-            return ResponseEntity.ok(studentsInfo);
+            return ResponseEntity.ok(applicants);
         }catch (Exception e){
-            logger.error("Error while getting students info between two dates: ".concat(e.getMessage()));
+            logger.error("Error while getting applicants between two dates: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
 
     @Override
     public ResponseEntity<?> findAll() {
-        List<ApplicantDto> studentsInfo = applicantRepository.findByOrderByCreatedAt()
+        List<ApplicantDto> applicants = applicantRepository.findByOrderByCreatedAt()
                 .stream().map(applicantMapper::toDto).toList();
-        return ResponseEntity.ok(studentsInfo);
+        return ResponseEntity.ok(applicants);
     }
 
 
@@ -75,8 +75,11 @@ public class ApplicantServiceImpl implements ApplicantService {
             applicantRepository.delete(ApplicantOptional.get());
             return OK_MESSAGE();
         }catch (Exception e){
-            logger.error("Error while removing student info: ".concat(e.getMessage()));
+            logger.error("Error while removing applicants: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
+
+
+
 }

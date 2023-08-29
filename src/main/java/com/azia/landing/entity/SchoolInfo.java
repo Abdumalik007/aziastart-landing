@@ -1,5 +1,6 @@
 package com.azia.landing.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,14 +10,13 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public class Teacher {
+public class SchoolInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private String fullName;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Image image;
-    private String subject;
-    private String description;
+    private Integer graduateAmount;
+    private Integer branchAmount;
+    private Integer studentAmount;
+    private Integer mediumOptScore;
 }

@@ -31,7 +31,10 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.POST,"/auth/login", "/applicant")
+                        auth
+                                .requestMatchers(HttpMethod.POST,"/auth/login", "/applicant")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/teacher/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
