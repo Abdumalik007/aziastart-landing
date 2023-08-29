@@ -95,6 +95,7 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             if(teacherOptional.isEmpty())
                 return NOT_FOUND();
+            Files.delete(Path.of(teacherOptional.get().getImage().getPath()));
             teacherRepository.delete(teacherOptional.get());
             return OK_MESSAGE();
         }catch (Exception e){

@@ -5,6 +5,7 @@ import com.azia.landing.dto.SchoolInfoDto;
 import com.azia.landing.service.main.SchoolInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class SchoolInfoController {
     private final SchoolInfoService schoolInfoService;
 
     @PutMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateSchoolInfo(@RequestBody SchoolInfoDto schoolInfoDto){
         return schoolInfoService.updateSchoolInfo(schoolInfoDto);
     }
