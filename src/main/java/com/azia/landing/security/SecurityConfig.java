@@ -37,7 +37,7 @@ public class SecurityConfig {
                                 )
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET,
-                                        "/teacher/**", "/school-info/**", "/student/**"
+                                        "/teacher/**", "/school-info/**", "/student/**", "/news/**"
                                 )
                                 .permitAll()
                                 .anyRequest()
