@@ -17,5 +17,5 @@ public class Student {
     private String fullName;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
-    private String _class;
+    private String level;
 }

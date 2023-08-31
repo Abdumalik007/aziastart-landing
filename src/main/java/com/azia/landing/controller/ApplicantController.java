@@ -15,13 +15,20 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/applicant")
-
 public class ApplicantController {
     private final ApplicantService applicantService;
 
     @PostMapping
     public ResponseEntity<?> createApplicant(@RequestBody @Valid ApplicantDto ApplicantDto){
         return applicantService.createApplicant(ApplicantDto);
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/contact/{id}")
+    public ResponseEntity<?> isApplicantContacted(@PathVariable("id") Integer applicantId,
+                                                  @RequestParam Boolean isContacted){
+        return applicantService.isApplicantContacted(applicantId, isContacted);
     }
 
 

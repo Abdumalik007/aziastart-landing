@@ -60,6 +60,7 @@ public class StudentServiceImpl implements StudentService {
             updateImage(studentDto, student, file);
 
             student.setFullName(student.getFullName());
+            student.setLevel(studentDto.getLevel());
             studentRepository.save(student);
             studentDto = studentMapper.toDto(student);
 

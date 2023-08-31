@@ -19,6 +19,7 @@ public class StudentController {
     @PostMapping
     public ResponseEntity<?> createStudent(@ModelAttribute StudentDto studentDto,
                                            @RequestParam(value = "file", required = false) MultipartFile file){
+        System.out.println(studentDto);
         return studentService.createStudent(studentDto, file);
     }
 

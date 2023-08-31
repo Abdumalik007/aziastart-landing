@@ -30,6 +30,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         try {
             Applicant applicant = applicantMapper.toEntity(ApplicantDto);
             applicant.setCreatedAt(LocalDate.now());
+            applicant.setIsContacted(false);
             applicantRepository.save(applicant);
             ApplicantDto.setId(applicant.getId());
             return OK_MESSAGE();
@@ -80,6 +81,16 @@ public class ApplicantServiceImpl implements ApplicantService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> isApplicantContacted(Integer applicantId, Boolean isContacted) {
+        try {
+            applicantRepository.isContacted(isContacted, applicantId);
+            return OK_MESSAGE();
+        }catch (Exception e){
+            logger.error("Error while setting value for isContacted column: ".concat(e.getMessage()));
+            return INTERNAL_ERROR();
+        }
+    }
 
 
 }

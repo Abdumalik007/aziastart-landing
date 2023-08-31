@@ -58,6 +58,8 @@ public class NewsServiceImpl implements NewsService {
             News news = optional.get();
             updateImage(newsDto, news, file);
 
+            news.setTitle(newsDto.getTitle());
+            news.setContent(news.getContent());
             newsRepository.save(news);
             newsDto = newsMapper.toDto(news);
 

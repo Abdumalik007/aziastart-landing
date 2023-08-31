@@ -2,8 +2,8 @@ package com.azia.landing.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import java.time.LocalDate;
 
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,4 +20,6 @@ public class ApplicantDto {
     private String level;
     @NotBlank(message = "Phone number must not be blank")
     private String phoneNumber;
+    private LocalDate createdAt;
+    private Boolean isContacted;
 }

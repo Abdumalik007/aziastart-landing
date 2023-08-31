@@ -3,11 +3,9 @@ package com.azia.landing.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +23,5 @@ public class Applicant {
     private String level;
     private String phoneNumber;
     private LocalDate createdAt;
+    private Boolean isContacted;
 }

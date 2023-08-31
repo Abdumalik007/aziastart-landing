@@ -8,10 +8,11 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@ToString
 public class StudentDto {
     private Integer id;
     @NotBlank(message = "Full name must not be blank")
     private String fullName;
     private ImageDto image;
-    private String _class;
+    private String level;
 }

@@ -13,4 +13,5 @@ public interface ApplicantService {
     ResponseEntity<?> findApplicantByDate(LocalDate from, LocalDate to);
     ResponseEntity<?> findAll();
     ResponseEntity<?> deleteApplicantById(Integer id);
+    ResponseEntity<?> isApplicantContacted(Integer applicantId, Boolean isContacted);
 }
