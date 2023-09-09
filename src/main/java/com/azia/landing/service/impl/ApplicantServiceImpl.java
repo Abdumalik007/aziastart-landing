@@ -92,5 +92,25 @@ public class ApplicantServiceImpl implements ApplicantService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> getByFilter(String value) {
+        List<ApplicantDto> applicantDtoList;
+        switch (value) {
+            case "old" ->
+                applicantDtoList = applicantRepository.findAllByOrderByCreatedAtDesc()
+                        .stream().map(applicantMapper::toDto).toList();
+            case "contacted" ->
+                applicantDtoList = applicantRepository.findAllByIsContactedIsTrue()
+                        .stream().map(applicantMapper::toDto).toList();
+            case "non-contacted" ->
+                applicantDtoList = applicantRepository.findApplicantByIsContactedIsFalse()
+                        .stream().map(applicantMapper::toDto).toList();
+            default ->
+                applicantDtoList = applicantRepository.findByOrderByCreatedAt()
+                        .stream().map(applicantMapper::toDto).toList();
+        }
+        return ResponseEntity.ok(applicantDtoList);
+    }
+
 
 }

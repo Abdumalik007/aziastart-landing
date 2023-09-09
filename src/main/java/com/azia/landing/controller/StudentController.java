@@ -18,7 +18,7 @@ public class StudentController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<?> createStudent(@ModelAttribute StudentDto studentDto,
-                                           @RequestParam(value = "file", required = false) MultipartFile file){
+                                           @RequestParam(value = "file") MultipartFile file){
         System.out.println(studentDto);
         return studentService.createStudent(studentDto, file);
     }
@@ -26,7 +26,7 @@ public class StudentController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity<?> updateStudent(@ModelAttribute StudentDto studentDto,
-                                           @RequestParam(value = "file", required = false) MultipartFile file){
+                                           @RequestParam(value = "file") MultipartFile file){
         return studentService.updateStudent(studentDto, file);
     }
 

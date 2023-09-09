@@ -27,7 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          http
                 .csrf(AbstractHttpConfigurer::disable)
-                 .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
@@ -37,7 +37,8 @@ public class SecurityConfig {
                                 )
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET,
-                                        "/teacher/**", "/school-info/**", "/student/**", "/news/**"
+                                        "/teacher/**", "/school-info/**", "/student/**", "/news/**",
+                                        "/video/**", "/subject/**"
                                 )
                                 .permitAll()
                                 .anyRequest()

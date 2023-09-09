@@ -6,7 +6,9 @@ import com.azia.landing.dto.AdminDto;
 import com.azia.landing.dto.UserDto;
 import com.azia.landing.mapper.AdminMapper;
 import com.azia.landing.repository.AdminRepository;
+import com.azia.landing.role.Role;
 import com.azia.landing.service.main.AdminService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,22 @@ public class AdminServiceImpl implements AdminService {
     private final AdminMapper adminMapper;
     private final PasswordEncoder encoder;
 
-
+    @PostConstruct
+    public void init() {
+        if(adminRepository.count() == 0) {
+            Admin admin = Admin.builder()
+                    .user(
+                            User.builder()
+                                    .email("admin@gmail.com")
+                                    .password(encoder.encode("123456"))
+                                    .role(Role.ADMIN).build()
+                    )
+                    .firstName("Admin")
+                    .lastName("Adminov")
+                    .build();
+            adminRepository.save(admin);
+        }
+    }
 
     @Override
     public ResponseEntity<?> updateAdmin(AdminDto adminDto) {

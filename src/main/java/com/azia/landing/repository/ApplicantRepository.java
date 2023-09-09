@@ -19,7 +19,9 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Integer> {
     @Transactional
     @Query("update Applicant a set a.isContacted = :value where a.id = :id")
     void isContacted(Boolean value, Integer id);
-
+    List<Applicant> findAllByIsContactedIsTrue();
+    List<Applicant> findApplicantByIsContactedIsFalse();
+    List<Applicant> findAllByOrderByCreatedAtDesc();
     List<Applicant> findAllByCreatedAtBetweenOrderByCreatedAt(LocalDate from, LocalDate to);
     List<Applicant> findByOrderByCreatedAt();
 }

@@ -14,4 +14,5 @@ public interface ApplicantService {
     ResponseEntity<?> findAll();
     ResponseEntity<?> deleteApplicantById(Integer id);
     ResponseEntity<?> isApplicantContacted(Integer applicantId, Boolean isContacted);
+    ResponseEntity<?> getByFilter(String value);
 }

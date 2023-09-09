@@ -11,8 +11,10 @@ import lombok.*;
 @ToString
 public class StudentDto {
     private Integer id;
-    @NotBlank(message = "Full name must not be blank")
-    private String fullName;
+    @NotBlank(message = "First name must not be blank")
+    private String firstName;
+    @NotBlank(message = "Last name must not be blank")
+    private String lastName;
     private ImageDto image;
     private String level;
 }

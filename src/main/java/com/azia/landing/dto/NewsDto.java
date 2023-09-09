@@ -2,6 +2,10 @@ package com.azia.landing.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,4 +16,5 @@ public class NewsDto {
     private String title;
     private String content;
     private ImageDto image;
+    private LocalDate createdAt;
 }

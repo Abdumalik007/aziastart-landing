@@ -4,6 +4,9 @@ import com.azia.landing.dto.ImageDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -19,4 +22,5 @@ public class News {
     private String content;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
+    private LocalDate createdAt;
 }

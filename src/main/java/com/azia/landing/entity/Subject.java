@@ -9,14 +9,25 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public class Student {
+public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private String firstName;
-    private String lastName;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Image image;
-    private String level;
+    private String name;
+    @OneToOne
+    private Teacher teacher;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

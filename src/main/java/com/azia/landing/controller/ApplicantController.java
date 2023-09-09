@@ -40,6 +40,13 @@ public class ApplicantController {
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/filter/{value}")
+    public ResponseEntity<?> getByFilter(@PathVariable String value){
+        return applicantService.getByFilter(value);
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<?> findApplicantByDate(
             @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate from,

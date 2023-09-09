@@ -13,10 +13,11 @@ import static com.azia.landing.helper.ResponseEntityHelper.NOT_FOUND;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/video")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class VideoController {
     private final VideoRepository videoRepository;
 
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/{url}")
     public ResponseEntity<?> addVideoUrl(@PathVariable String url){
         if(videoRepository.count() == 1){
@@ -31,7 +32,6 @@ public class VideoController {
             return ResponseEntity.ok(video);
         }
     }
-
 
 
     @GetMapping

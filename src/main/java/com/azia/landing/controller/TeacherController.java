@@ -19,14 +19,14 @@ public class TeacherController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<?> createTeacher(@ModelAttribute TeacherDto teacherDto,
-                                           @RequestParam(value = "file", required = false) MultipartFile file){
+                                           @RequestParam(value = "file") MultipartFile file){
         return teacherService.createTeacher(teacherDto, file);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity<?> updateTeacher(@ModelAttribute TeacherDto teacherDto,
-                                           @RequestParam(value = "file", required = false) MultipartFile file){
+                                           @RequestParam(value = "file") MultipartFile file){
         return teacherService.updateTeacher(teacherDto, file);
     }
 
@@ -48,5 +48,7 @@ public class TeacherController {
     public ResponseEntity<?> deleteTeacherById(@PathVariable Integer id){
         return teacherService.deleteTeacherById(id);
     }
+
+
 
 }

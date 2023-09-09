@@ -9,11 +9,14 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@ToString
 public class TeacherDto {
     private Integer id;
-    @NotBlank(message = "Full name must not be blank")
-    private String fullName;
+    @NotBlank(message = "First name must not be blank")
+    private String firstName;
+    @NotBlank(message = "Last name must not be blank")
+    private String lastName;
     private ImageDto image;
-    private String subject;
+    private SubjectDto subject;
     private String description;
 }

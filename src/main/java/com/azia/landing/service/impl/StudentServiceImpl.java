@@ -35,12 +35,14 @@ public class StudentServiceImpl implements StudentService {
     public ResponseEntity<?> createStudent(StudentDto studentDto, MultipartFile file) {
         try {
             Student student = studentMapper.toEntity(studentDto);
-            if(Optional.ofNullable(file).isPresent()){
-                Image image = buildImage(file);
-                student.setImage(image);
-            }
+
+            Image image = buildImage(file);
+            student.setImage(image);
+
             studentRepository.save(student);
+
             studentDto = studentMapper.toDto(student);
+
             return ResponseEntity.ok(studentDto);
         }catch (Exception e) {
             logger.error("Error while creating a student: ".concat(e.getMessage()));
@@ -56,14 +58,17 @@ public class StudentServiceImpl implements StudentService {
             Optional<Student> optional = studentRepository.findById(studentDto.getId());
             if(optional.isEmpty())
                 return NOT_FOUND();
+
             Student student = optional.get();
+
             updateImage(studentDto, student, file);
-
-            student.setFullName(student.getFullName());
+            student.setFirstName(studentDto.getFirstName());
+            student.setLastName(studentDto.getLastName());
             student.setLevel(studentDto.getLevel());
-            studentRepository.save(student);
-            studentDto = studentMapper.toDto(student);
 
+            studentRepository.save(student);
+
+            studentDto = studentMapper.toDto(student);
             return ResponseEntity.ok(studentDto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,19 +119,10 @@ public class StudentServiceImpl implements StudentService {
 
 
     private void updateImage(StudentDto studentDto, Student student, MultipartFile file) throws IOException {
-        if(Optional.ofNullable(file).isPresent()) {
-            if(studentRepository.existsStudentByIdAndImageIsNull(studentDto.getId()))
-                student.setImage(buildImage(file));
-            else if(!Objects.equals(file.getOriginalFilename(), studentRepository.getStudentImageName(studentDto.getId()))) {
-                Image oldImage = student.getImage();
-                student.setImage(buildImage(file));
-                Files.delete(Path.of(oldImage.getPath()));
-            }
-        } else {
-            Image image = student.getImage();
-            String path = image.getPath();
-            student.setImage(null);
-            Files.delete(Path.of(path));
+        if(!Objects.equals(file.getOriginalFilename(), studentRepository.getStudentImageName(studentDto.getId()))) {
+            Image oldImage = student.getImage();
+            student.setImage(buildImage(file));
+            Files.delete(Path.of(oldImage.getPath()));
         }
     }
 

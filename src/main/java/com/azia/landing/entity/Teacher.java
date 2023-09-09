@@ -14,9 +14,11 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
-    private String subject;
+    @OneToOne
+    private Subject subject;
     private String description;
 }

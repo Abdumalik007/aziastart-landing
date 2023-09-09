@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,7 +39,9 @@ public class NewsServiceImpl implements NewsService {
                 Image image = buildImage(file);
                 news.setImage(image);
             }
+            news.setCreatedAt(LocalDate.now());
             newsRepository.save(news);
+
             newsDto = newsMapper.toDto(news);
             return ResponseEntity.ok(newsDto);
         }catch (Exception e) {
@@ -55,11 +58,12 @@ public class NewsServiceImpl implements NewsService {
             Optional<News> optional = newsRepository.findById(newsDto.getId());
             if(optional.isEmpty())
                 return NOT_FOUND();
+
             News news = optional.get();
             updateImage(newsDto, news, file);
-
             news.setTitle(newsDto.getTitle());
             news.setContent(news.getContent());
+
             newsRepository.save(news);
             newsDto = newsMapper.toDto(news);
 
@@ -113,19 +117,12 @@ public class NewsServiceImpl implements NewsService {
 
 
     private void updateImage(NewsDto newsDto, News news, MultipartFile file) throws IOException {
-        if(Optional.ofNullable(file).isPresent()) {
-            if(newsRepository.existsNewsByIdAndImageIsNull(newsDto.getId()))
-                news.setImage(buildImage(file));
-            else if(!Objects.equals(file.getOriginalFilename(), newsRepository.getNewsImageName(newsDto.getId()))) {
+        if(!Objects.equals(file.getOriginalFilename(), newsRepository.getNewsImageName(newsDto.getId()))) {
                 Image oldImage = news.getImage();
                 news.setImage(buildImage(file));
                 Files.delete(Path.of(oldImage.getPath()));
-            }
-        } else {
-            Image image = news.getImage();
-            String path = image.getPath();
-            news.setImage(null);
-            Files.delete(Path.of(path));
         }
     }
+
+
 }

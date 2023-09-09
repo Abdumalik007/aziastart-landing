@@ -1,10 +1,14 @@
 package com.azia.landing.service.impl;
 
 import com.azia.landing.dto.SchoolInfoDto;
+import com.azia.landing.entity.Admin;
 import com.azia.landing.entity.SchoolInfo;
+import com.azia.landing.entity.User;
 import com.azia.landing.mapper.SchoolInfoMapper;
 import com.azia.landing.repository.SchoolInfoRepository;
+import com.azia.landing.role.Role;
 import com.azia.landing.service.main.SchoolInfoService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +23,18 @@ public class SchoolInfoServiceImpl implements SchoolInfoService {
     private final SchoolInfoRepository schoolInfoRepository;
     private final SchoolInfoMapper schoolInfoMapper;
 
+    @PostConstruct
+    public void init() {
+        if(schoolInfoRepository.count() == 0) {
+            SchoolInfo schoolInfo = SchoolInfo.builder()
+                    .branchAmount(2)
+                    .graduateAmount(1200)
+                    .studentAmount(1500)
+                    .mediumOptScore(145)
+                    .build();
+            schoolInfoRepository.save(schoolInfo);
+        }
+    }
     @Override
     public ResponseEntity<?> updateSchoolInfo(SchoolInfoDto schoolInfoDto) {
         try {
