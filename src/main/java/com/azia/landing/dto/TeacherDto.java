@@ -18,5 +18,6 @@ public class TeacherDto {
     private String lastName;
     private ImageDto image;
     private SubjectDto subject;
+    @NotBlank(message = "Description must not be blank")
     private String description;
 }

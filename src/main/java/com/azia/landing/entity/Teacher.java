@@ -20,5 +20,7 @@ public class Teacher {
     private Image image;
     @OneToOne
     private Subject subject;
+
+    @Column(length = 5000)
     private String description;
 }

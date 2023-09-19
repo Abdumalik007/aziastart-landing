@@ -2,6 +2,7 @@ package com.azia.landing.controller;
 
 import com.azia.landing.dto.NewsDto;
 import com.azia.landing.service.main.NewsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,15 +17,15 @@ public class NewsController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<?> createNews(@ModelAttribute NewsDto newsDto,
-                                           @RequestParam(value = "file", required = false) MultipartFile file){
+    public ResponseEntity<?> createNews(@ModelAttribute @Valid NewsDto newsDto,
+                                        @RequestParam MultipartFile file){
         return newsService.createNews(newsDto, file);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping
-    public ResponseEntity<?> updateNews(@ModelAttribute NewsDto newsDto,
-                                           @RequestParam(value = "file", required = false) MultipartFile file){
+    public ResponseEntity<?> updateNews(@ModelAttribute @Valid NewsDto newsDto,
+                                        @RequestParam(value = "file", required = false) MultipartFile file){
         return newsService.updateNews(newsDto, file);
     }
 

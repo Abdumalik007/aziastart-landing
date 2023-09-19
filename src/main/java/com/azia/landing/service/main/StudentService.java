@@ -8,6 +8,8 @@ public interface StudentService {
     ResponseEntity<?> createStudent(StudentDto studentDto, MultipartFile file);
     ResponseEntity<?> updateStudent(StudentDto studentDto, MultipartFile file);
     ResponseEntity<?> findStudentById(Integer id);
+    ResponseEntity<?> search(String firstName, String lastName);
     ResponseEntity<?> findAllStudents();
     ResponseEntity<?> deleteStudentById(Integer id);
+
 }

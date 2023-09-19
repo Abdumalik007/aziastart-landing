@@ -4,6 +4,7 @@ import com.azia.landing.dto.StudentDto;
 import com.azia.landing.entity.Image;
 import com.azia.landing.entity.Student;
 import com.azia.landing.mapper.StudentMapper;
+import com.azia.landing.repository.ImageRepository;
 import com.azia.landing.repository.StudentRepository;
 import com.azia.landing.service.main.StudentService;
 import com.azia.landing.util.ImageUtil;
@@ -30,6 +31,7 @@ public class StudentServiceImpl implements StudentService {
     public static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final ImageRepository imageRepository;
 
     @Override
     public ResponseEntity<?> createStudent(StudentDto studentDto, MultipartFile file) {
@@ -61,7 +63,9 @@ public class StudentServiceImpl implements StudentService {
 
             Student student = optional.get();
 
-            updateImage(studentDto, student, file);
+            if(file != null)
+                updateImage(student, file);
+
             student.setFirstName(studentDto.getFirstName());
             student.setLastName(studentDto.getLastName());
             student.setLevel(studentDto.getLevel());
@@ -75,6 +79,14 @@ public class StudentServiceImpl implements StudentService {
             logger.error("Error while updating a student: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
+    }
+
+
+    @Override
+    public ResponseEntity<?> search(String first, String last) {
+        List<StudentDto> students = studentRepository.findByFirstNameOrLastName(first, last)
+                .stream().map(studentMapper::toDto).toList();
+        return ResponseEntity.ok(students);
     }
 
 
@@ -98,8 +110,8 @@ public class StudentServiceImpl implements StudentService {
         try {
             if(studentOptional.isEmpty())
                 return NOT_FOUND();
-            Files.delete(Path.of(studentOptional.get().getImage().getPath()));
             studentRepository.delete(studentOptional.get());
+            Files.delete(Path.of(studentOptional.get().getImage().getPath()));
             return OK_MESSAGE();
         }catch (Exception e){
             logger.error("Error while removing students: ".concat(e.getMessage()));
@@ -118,12 +130,11 @@ public class StudentServiceImpl implements StudentService {
 
 
 
-    private void updateImage(StudentDto studentDto, Student student, MultipartFile file) throws IOException {
-        if(!Objects.equals(file.getOriginalFilename(), studentRepository.getStudentImageName(studentDto.getId()))) {
+    private void updateImage(Student student, MultipartFile file) throws IOException {
             Image oldImage = student.getImage();
-            student.setImage(buildImage(file));
+            imageRepository.delete(oldImage);
             Files.delete(Path.of(oldImage.getPath()));
-        }
+            student.setImage(buildImage(file));
     }
 
 

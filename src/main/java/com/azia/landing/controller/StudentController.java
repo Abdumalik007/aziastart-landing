@@ -2,6 +2,7 @@ package com.azia.landing.controller;
 
 import com.azia.landing.dto.StudentDto;
 import com.azia.landing.service.main.StudentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,16 +18,16 @@ public class StudentController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<?> createStudent(@ModelAttribute StudentDto studentDto,
-                                           @RequestParam(value = "file") MultipartFile file){
+    public ResponseEntity<?> createStudent(@ModelAttribute @Valid StudentDto studentDto,
+                                           @RequestParam MultipartFile file){
         System.out.println(studentDto);
         return studentService.createStudent(studentDto, file);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping
-    public ResponseEntity<?> updateStudent(@ModelAttribute StudentDto studentDto,
-                                           @RequestParam(value = "file") MultipartFile file){
+    public ResponseEntity<?> updateStudent(@ModelAttribute @Valid StudentDto studentDto,
+                                           @RequestParam(required = false) MultipartFile file){
         return studentService.updateStudent(studentDto, file);
     }
 
@@ -36,6 +37,16 @@ public class StudentController {
         return studentService.findAllStudents();
     }
 
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/search/{name}")
+    public ResponseEntity<?> searchStudentByParams(@PathVariable String name){
+        String[] s = name.split(" ");
+        boolean first = s.length > 0;
+        boolean second = s.length > 1;
+        return studentService.search((first) ? s[0] : null, (second) ? s[1] : null);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findStudentById(@PathVariable Integer id){

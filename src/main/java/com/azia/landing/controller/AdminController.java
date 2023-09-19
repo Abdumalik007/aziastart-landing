@@ -3,6 +3,7 @@ package com.azia.landing.controller;
 
 import com.azia.landing.dto.AdminDto;
 import com.azia.landing.service.main.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,11 +20,13 @@ public class AdminController {
     private final AdminService adminService;
 
     @PutMapping
-    public ResponseEntity<?> updateAdmin(@RequestBody AdminDto adminDto){
+    public ResponseEntity<?> updateAdmin(@RequestBody @Valid AdminDto adminDto){
         return adminService.updateAdmin(adminDto);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<?> findAdminById(@PathVariable Integer id){
+    public ResponseEntity<?> findAdminById(@PathVariable Integer id)
+
+    {
         return adminService.findAdminById(id);
     }
 }

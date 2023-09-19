@@ -12,6 +12,7 @@ public interface ApplicantService {
     ResponseEntity<?> findApplicantById(Integer id);
     ResponseEntity<?> findApplicantByDate(LocalDate from, LocalDate to);
     ResponseEntity<?> findAll();
+    ResponseEntity<?> search(String firstName, String lastName);
     ResponseEntity<?> deleteApplicantById(Integer id);
     ResponseEntity<?> isApplicantContacted(Integer applicantId, Boolean isContacted);
     ResponseEntity<?> getByFilter(String value);

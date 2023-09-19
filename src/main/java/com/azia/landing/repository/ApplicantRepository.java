@@ -1,6 +1,7 @@
 package com.azia.landing.repository;
 
 import com.azia.landing.entity.Applicant;
+import com.azia.landing.entity.Applicant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -24,4 +26,9 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Integer> {
     List<Applicant> findAllByOrderByCreatedAtDesc();
     List<Applicant> findAllByCreatedAtBetweenOrderByCreatedAt(LocalDate from, LocalDate to);
     List<Applicant> findByOrderByCreatedAt();
+    @Query("""
+    select a from Applicant a where (:second is null and (a.firstName ilike :first% or a.lastName ilike :first%))
+    or (a.firstName ilike :first% and a.lastName ilike :second%)
+    """)
+    List<Applicant> findByFirstNameOrLastName(String first, String second);
 }

@@ -56,6 +56,16 @@ public class ApplicantController {
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/search/{name}")
+    public ResponseEntity<?> searchApplicantByParams(@PathVariable String name){
+        String[] s = name.split(" ");
+        boolean first = s.length > 0;
+        boolean second = s.length > 1;
+        return applicantService.search((first) ? s[0] : null, (second) ? s[1] : null);
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/get-all")
     public ResponseEntity<?> findAllApplicants(){
         return applicantService.findAll();

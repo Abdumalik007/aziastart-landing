@@ -26,4 +26,5 @@ public class SubjectController {
     public ResponseEntity<?> findAllSubjects(){
         return subjectService.findAllSubjects();
     }
+
 }

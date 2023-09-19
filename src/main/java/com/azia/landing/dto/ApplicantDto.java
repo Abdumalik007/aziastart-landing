@@ -1,6 +1,7 @@
 package com.azia.landing.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDate;
 
@@ -17,6 +18,7 @@ public class ApplicantDto {
     @NotBlank(message = "Lastname must not be blank")
     private String lastName;
     @NotBlank(message = "Level must not be blank")
+    @Size(min = 1, max = 11)
     private String level;
     @NotBlank(message = "Phone number must not be blank")
     private String phoneNumber;

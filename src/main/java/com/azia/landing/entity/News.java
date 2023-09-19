@@ -19,6 +19,8 @@ public class News {
     @Column(name = "id", nullable = false)
     private Integer id;
     private String title;
+
+    @Column(length = 5000)
     private String content;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;

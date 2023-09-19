@@ -35,6 +35,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public ResponseEntity<?> updateSubjects(List<SubjectDto> subjectsDto) {
+        for (SubjectDto s : subjectsDto) {
+            System.out.println(s);
+        }
         try {
             if(!validate(subjectsDto)) return INTERNAL_ERROR();
             subjectsDto.forEach(s -> {

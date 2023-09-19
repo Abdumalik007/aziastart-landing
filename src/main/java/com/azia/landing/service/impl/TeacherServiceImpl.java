@@ -5,6 +5,7 @@ import com.azia.landing.entity.Image;
 import com.azia.landing.entity.Subject;
 import com.azia.landing.entity.Teacher;
 import com.azia.landing.mapper.TeacherMapper;
+import com.azia.landing.repository.ImageRepository;
 import com.azia.landing.repository.SubjectRepository;
 import com.azia.landing.repository.TeacherRepository;
 import com.azia.landing.service.main.TeacherService;
@@ -32,17 +33,18 @@ public class TeacherServiceImpl implements TeacherService {
     public static final Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
     private final TeacherRepository teacherRepository;
     private final SubjectRepository subjectRepository;
+    private final ImageRepository imageRepository;
     private final TeacherMapper teacherMapper;
 
     @Override
-    public ResponseEntity<?> createTeacher(TeacherDto teacherDto, MultipartFile file) {
+    public ResponseEntity<?> createTeacher(TeacherDto teacherDto, MultipartFile file, Integer subjectId) {
         try {
             Teacher teacher = teacherMapper.toEntity(teacherDto);
 
             Image image = buildImage(file);
             teacher.setImage(image);
 
-            updateTeachersSubject(teacherDto, teacher);
+            addSubjectToTeacher(teacher, subjectId);
             teacherDto = teacherMapper.toDto(teacher);
 
             return ResponseEntity.ok(teacherDto);
@@ -52,23 +54,42 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+    private void addSubjectToTeacher(Teacher teacher, Integer subjectId) {
+        Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
+
+        if(optionalSubject.isEmpty())
+            throw new RuntimeException("The subject does not exist");
+
+        Subject subject = optionalSubject.get();
+
+        if(Optional.ofNullable(subject.getTeacher()).isPresent())
+            throw new RuntimeException("The subject has already connected to teacher");
+
+        teacher.setSubject(subject);
+        teacherRepository.save(teacher);
+
+        subject.setTeacher(teacher);
+        subjectRepository.save(subject);
+    }
 
 
     @Override
-    public ResponseEntity<?> updateTeacher(TeacherDto teacherDto, MultipartFile file) {
+    public ResponseEntity<?> updateTeacher(TeacherDto teacherDto, MultipartFile file, Integer subjectId) {
         try {
             Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
             if(optional.isEmpty())
                 return NOT_FOUND();
+
             Teacher teacher = optional.get();
-            updateImage(teacherDto, teacher, file);
+            if(file != null)
+                updateImage(teacher, file);
 
             teacher.setFirstName(teacherDto.getFirstName());
             teacher.setLastName(teacherDto.getLastName());
             teacher.setDescription(teacherDto.getDescription());
 
-            if(!teacherDto.getSubject().getId().equals(teacher.getSubject().getId()))
-                updateTeachersSubject(teacherDto, teacher);
+            if(!subjectId.equals(teacher.getSubject().getId()))
+                updateTeachersSubject(teacher, subjectId);
 
             teacherRepository.save(teacher);
 
@@ -81,6 +102,13 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+
+    @Override
+    public ResponseEntity<?> search(String firstName, String lastName) {
+        List<TeacherDto> teachers = teacherRepository.findByFirstNameOrLastName(firstName, lastName)
+                .stream().map(teacherMapper::toDto).toList();
+        return ResponseEntity.ok(teachers);
+    }
 
 
     @Override
@@ -107,8 +135,12 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             if(teacherOptional.isEmpty())
                 return NOT_FOUND();
+            Teacher teacher = teacherOptional.get();
+            teacher.getSubject().setTeacher(null);
+            teacherRepository.save(teacher);
+            teacherRepository.delete(teacher);
+
             Files.delete(Path.of(teacherOptional.get().getImage().getPath()));
-            teacherRepository.delete(teacherOptional.get());
             return OK_MESSAGE();
         }catch (Exception e){
             logger.error("Error while removing teachers: ".concat(e.getMessage()));
@@ -117,17 +149,24 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
 
-    private void updateTeachersSubject(TeacherDto teacherDto, Teacher teacher) {
-        Optional<Subject> optional = subjectRepository.findById(teacherDto.getSubject().getId());
-        if(optional.isEmpty()) throw new RuntimeException();
+    private void updateTeachersSubject(Teacher teacher, Integer subjectId) {
+        Optional<Subject> optional = subjectRepository.findById(subjectId);
 
+        if(optional.isEmpty()) throw new RuntimeException("Subject does not exist");
         Subject subject = optional.get();
-        teacher.setSubject(subject);
-        teacherRepository.save(teacher);
+
+        if(Optional.ofNullable(subject.getTeacher()).isPresent())
+            throw new RuntimeException("The subject has already connected to teacher");
+
+        if(Optional.ofNullable(teacher.getSubject().getTeacher()).isPresent()) {
+            teacher.getSubject().setTeacher(null);
+            teacherRepository.save(teacher);
+        }
 
         subject.setTeacher(teacher);
         subjectRepository.save(subject);
 
+        teacher.setSubject(subject);
     }
 
 
@@ -141,12 +180,14 @@ public class TeacherServiceImpl implements TeacherService {
 
 
 
-    private void updateImage(TeacherDto teacherDto, Teacher teacher, MultipartFile file) throws IOException {
-        if(!Objects.equals(file.getOriginalFilename(), teacherRepository.getTeacherImageName(teacherDto.getId()))) {
+    private void updateImage(Teacher teacher, MultipartFile file) throws IOException {
+        if(Optional.ofNullable(teacher.getImage()).isPresent()) {
             Image oldImage = teacher.getImage();
-            teacher.setImage(buildImage(file));
+            imageRepository.delete(oldImage);
             Files.delete(Path.of(oldImage.getPath()));
         }
+        teacher.setImage(buildImage(file));
+
     }
 
 

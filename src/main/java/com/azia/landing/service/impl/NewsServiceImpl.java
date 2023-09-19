@@ -4,6 +4,7 @@ import com.azia.landing.dto.NewsDto;
 import com.azia.landing.entity.Image;
 import com.azia.landing.entity.News;
 import com.azia.landing.mapper.NewsMapper;
+import com.azia.landing.repository.ImageRepository;
 import com.azia.landing.repository.NewsRepository;
 import com.azia.landing.service.main.NewsService;
 import com.azia.landing.util.ImageUtil;
@@ -30,16 +31,14 @@ public class NewsServiceImpl implements NewsService {
     public static final Logger logger = LoggerFactory.getLogger(ApplicantServiceImpl.class);
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
+    private final ImageRepository imageRepository;
 
     @Override
     public ResponseEntity<?> createNews(NewsDto newsDto, MultipartFile file) {
         try {
             News news = newsMapper.toEntity(newsDto);
-            if(Optional.ofNullable(file).isPresent()){
-                Image image = buildImage(file);
-                news.setImage(image);
-            }
-            news.setCreatedAt(LocalDate.now());
+            Image image = buildImage(file);
+            news.setImage(image);
             newsRepository.save(news);
 
             newsDto = newsMapper.toDto(news);
@@ -60,16 +59,18 @@ public class NewsServiceImpl implements NewsService {
                 return NOT_FOUND();
 
             News news = optional.get();
-            updateImage(newsDto, news, file);
+            if(file != null)
+                updateImage(news, file);
+
             news.setTitle(newsDto.getTitle());
-            news.setContent(news.getContent());
+            news.setContent(newsDto.getContent());
+            news.setCreatedAt(newsDto.getCreatedAt());
 
             newsRepository.save(news);
             newsDto = newsMapper.toDto(news);
 
             return ResponseEntity.ok(newsDto);
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("Error while updating a news: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
@@ -116,12 +117,12 @@ public class NewsServiceImpl implements NewsService {
 
 
 
-    private void updateImage(NewsDto newsDto, News news, MultipartFile file) throws IOException {
-        if(!Objects.equals(file.getOriginalFilename(), newsRepository.getNewsImageName(newsDto.getId()))) {
-                Image oldImage = news.getImage();
-                news.setImage(buildImage(file));
-                Files.delete(Path.of(oldImage.getPath()));
-        }
+    private void updateImage(News news, MultipartFile file) throws IOException {
+        Image oldImage = news.getImage();
+        imageRepository.delete(oldImage);
+        Files.delete(Path.of(oldImage.getPath()));
+
+        news.setImage(buildImage(file));
     }
 
 

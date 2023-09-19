@@ -3,6 +3,7 @@ package com.azia.landing.controller;
 
 import com.azia.landing.dto.SchoolInfoDto;
 import com.azia.landing.service.main.SchoolInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,7 @@ public class SchoolInfoController {
 
     @PutMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateSchoolInfo(@RequestBody SchoolInfoDto schoolInfoDto){
+    public ResponseEntity<?> updateSchoolInfo(@RequestBody @Valid SchoolInfoDto schoolInfoDto){
         return schoolInfoService.updateSchoolInfo(schoolInfoDto);
     }
 

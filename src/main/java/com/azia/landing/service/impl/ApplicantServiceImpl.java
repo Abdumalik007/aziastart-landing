@@ -1,6 +1,7 @@
 package com.azia.landing.service.impl;
 
 import com.azia.landing.dto.ApplicantDto;
+import com.azia.landing.dto.StudentDto;
 import com.azia.landing.entity.Applicant;
 import com.azia.landing.mapper.ApplicantMapper;
 import com.azia.landing.repository.ApplicantRepository;
@@ -62,6 +63,14 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public ResponseEntity<?> findAll() {
         List<ApplicantDto> applicants = applicantRepository.findByOrderByCreatedAt()
+                .stream().map(applicantMapper::toDto).toList();
+        return ResponseEntity.ok(applicants);
+    }
+
+
+    @Override
+    public ResponseEntity<?> search(String first, String last) {
+        List<ApplicantDto> applicants = applicantRepository.findByFirstNameOrLastName(first, last)
                 .stream().map(applicantMapper::toDto).toList();
         return ResponseEntity.ok(applicants);
     }
