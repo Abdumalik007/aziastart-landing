@@ -32,8 +32,7 @@ public class NewsController {
 
     @GetMapping("/get-all")
     public ResponseEntity<?> findAllNews(){
-        return ResponseEntity.ok("Hello");
-//        return newsService.findAllNewss();
+        return newsService.findAllNewss();
     }
 
 
