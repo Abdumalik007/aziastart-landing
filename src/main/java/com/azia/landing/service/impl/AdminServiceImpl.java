@@ -36,8 +36,8 @@ public class AdminServiceImpl implements AdminService {
             Admin admin = Admin.builder()
                     .user(
                             User.builder()
-                                    .email("admin@gmail.com")
-                                    .password(encoder.encode("123456"))
+                                    .email("aziastart@gmail.com")
+                                    .password(encoder.encode("190271"))
                                     .role(Role.ADMIN).build()
                     )
                     .firstName("Admin")

@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@Table(name = "subject", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

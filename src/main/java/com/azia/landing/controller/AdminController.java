@@ -23,10 +23,9 @@ public class AdminController {
     public ResponseEntity<?> updateAdmin(@RequestBody @Valid AdminDto adminDto){
         return adminService.updateAdmin(adminDto);
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findAdminById(@PathVariable Integer id)
 
-    {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findAdminById(@PathVariable Integer id) {
         return adminService.findAdminById(id);
     }
 }

@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import static com.azia.landing.helper.ResponseEntityHelper.INTERNAL_ERROR;
@@ -28,18 +30,15 @@ public class SubjectServiceImpl implements SubjectService {
     @PostConstruct
     public void init() {
         if(subjectRepository.count() == 0) {
-            for(int i = 0; i < 6; i++)
+            for(int i = 0; i < 15; i++)
                 subjectRepository.save(new Subject());
         }
     }
 
     @Override
     public ResponseEntity<?> updateSubjects(List<SubjectDto> subjectsDto) {
-        for (SubjectDto s : subjectsDto) {
-            System.out.println(s);
-        }
         try {
-            if(!validate(subjectsDto)) return INTERNAL_ERROR();
+
             subjectsDto.forEach(s -> {
                 Optional<Subject> optional = subjectRepository.findById(s.getId());
                 if(optional.isEmpty()) throw new RuntimeException(
@@ -58,26 +57,18 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public ResponseEntity<?> findAllSubjects() {
-        List<SubjectDto> subjectsDto = subjectRepository.findAll()
+        List<SubjectDto> subjectsDto = new java.util.ArrayList<>(subjectRepository.findAllByOrderById()
                 .stream().map(s ->
                         SubjectDto.builder()
                                 .id(s.getId())
                                 .name(s.getName())
                                 .teacher(teacherMapper.toDto(s.getTeacher()))
                                 .build()
-                ).toList();
+                ).toList());
         return ResponseEntity.ok(subjectsDto);
     }
 
 
-
-    private boolean validate(List<SubjectDto> subjects) {
-        if(subjects.size() != 6) return false;
-        for (SubjectDto subjectDto : subjects)
-            if(Optional.ofNullable(subjectDto).isEmpty() || Optional.ofNullable(subjectDto.getName()).isEmpty())
-                return false;
-        return true;
-    }
 
 
 }

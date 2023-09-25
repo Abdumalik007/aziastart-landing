@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,7 @@ public class ImageUtil {
 
 
     public static String uploadImage(MultipartFile file) {
-        Path path = Paths.get("uploads", UUID.randomUUID() + "." +
+        Path path = Paths.get("uploads" + File.separator + UUID.randomUUID() + "." +
                 Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1]);
         try {
             Files.createFile(path);
