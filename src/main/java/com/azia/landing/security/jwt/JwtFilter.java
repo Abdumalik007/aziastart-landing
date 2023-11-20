@@ -1,15 +1,16 @@
 package com.azia.landing.security.jwt;
 
-import com.azia.landing.entity.User;
-import com.azia.landing.redis.UserSession;
-import com.azia.landing.redis.UserSessionRedisRepository;
+import food.system.entity.User;
+import food.system.redis.UserSession;
+import food.system.redis.UserSessionRedisRepository;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,8 +23,8 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-
-    private final JwtService jwtService;
+    public static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
+    private final JwtUtil jwtUtil;
     private final UserSessionRedisRepository redisRepository;
 
     @Override
@@ -35,10 +36,11 @@ public class JwtFilter extends OncePerRequestFilter {
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             try {
                 token = authHeader.substring(7);
-                boolean nonExpired = jwtService.isTokenNonExpired(token);
-                if(!nonExpired) throw new RuntimeException("Token has expired or invalid");
+                boolean nonExpired = jwtUtil.isTokenNonExpired(token);
+                if(!nonExpired)
+                    throw new RuntimeException("Token has expired or invalid");
 
-                String uuid = jwtService.extractSubject(token);
+                String uuid = jwtUtil.extractSubject(token);
 
                 Optional<UserSession> optionalUser = redisRepository.findById(uuid);
                 if (optionalUser.isEmpty()) {
@@ -55,14 +57,14 @@ public class JwtFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(request);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }catch (RuntimeException e){
-                logger.error(e.getMessage());
+                logger.warn("Invalid token with error: {}", e.getMessage());
                 SecurityContextHolder.getContext().setAuthentication(null);
-                response.setStatus(HttpStatus.FORBIDDEN.value());
             }
+        }else {
+            SecurityContextHolder.getContext().setAuthentication(null);
         }
         filterChain.doFilter(request, response);
     }
-
 
 
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -68,6 +69,7 @@ public class ApplicantController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/get-all")
     public ResponseEntity<?> findAllApplicants(){
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());
         return applicantService.findAll();
     }
 

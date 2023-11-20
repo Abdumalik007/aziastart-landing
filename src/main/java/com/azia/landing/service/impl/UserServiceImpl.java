@@ -42,10 +42,10 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> login(LoginRequest loginRequest, HttpServletRequest request) {
         Optional<User> userOptional = userRepository.findUserByEmail(loginRequest.getEmail());
         if(userOptional.isEmpty())
-            return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).build();
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
 
         if(!passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword()))
-            return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).build();
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
                         null,
                         userOptional.get().getAuthorities()
                 );
-
         authenticationToken.setDetails(request);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
@@ -70,6 +69,7 @@ public class UserServiceImpl implements UserService {
             return INTERNAL_ERROR();
         }
         String jwtToken = jwtService.generateToken(uuid);
+
         LoginResponse response = new LoginResponse();
         Role role = userOptional.get().getRole();
         response.setRole(role.name());

@@ -11,5 +11,4 @@ public class LandingApplication {
         SpringApplication.run(LandingApplication.class, args);
     }
 
-
 }

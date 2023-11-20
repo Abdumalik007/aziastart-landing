@@ -12,8 +12,5 @@ import java.io.Serializable;
 @Builder
 public class ImageDto {
     private Integer id;
-    private String name;
     private String path;
-    private String ext;
-    private byte[] data;
 }

@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.azia.landing.helper.ResponseEntityHelper.*;
+import static com.azia.landing.util.ImageUtil.buildImage;
 
 
 @RequiredArgsConstructor
@@ -119,14 +120,6 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-
-    private Image buildImage(MultipartFile file) {
-        return Image.builder()
-                .name(file.getOriginalFilename())
-                .ext(Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1])
-                .path(ImageUtil.uploadImage(file))
-                .build();
-    }
 
 
 

@@ -1,7 +1,8 @@
 package com.azia.landing.security;
 
-
-import com.azia.landing.security.jwt.JwtFilter;
+import food.system.security.handler.CustomAccessDeniedHandler;
+import food.system.security.handler.CustomEntryPoint;
+import food.system.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -32,23 +34,34 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(HttpMethod.POST,
-                                        "/auth/login", "/applicant"
-                                )
+                                .requestMatchers(
+                                        HttpMethod.GET, "/category/**", "/food/**")
                                 .permitAll()
-                                .requestMatchers(HttpMethod.GET,
-                                        "/teacher/**", "/school-info/**", "/student/**", "/news/**",
-                                        "/video/**", "/subject/**"
-
-
-                                )
+                                .requestMatchers(HttpMethod.POST,
+                                        "/review/**",
+                                        "/auth/login")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(
+                        conf -> conf
+                                 .accessDeniedHandler(accessDeniedHandler())
+                                 .authenticationEntryPoint(entryPointHandler())
+                 );
 
          return http.build();
+    }
+
+    @Bean
+    public CustomEntryPoint entryPointHandler() {
+        return new CustomEntryPoint();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 
 }
