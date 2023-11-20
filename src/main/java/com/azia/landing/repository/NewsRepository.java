@@ -7,7 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Integer> {
-    boolean existsNewsByIdAndImageIsNull(Integer id);
-    @Query("select n.image.name from News n where n.id = :id")
-    String getNewsImageName(Integer id);
+
 }

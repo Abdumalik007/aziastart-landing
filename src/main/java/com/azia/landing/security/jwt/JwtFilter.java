@@ -1,8 +1,8 @@
 package com.azia.landing.security.jwt;
 
-import food.system.entity.User;
-import food.system.redis.UserSession;
-import food.system.redis.UserSessionRedisRepository;
+import com.azia.landing.entity.User;
+import com.azia.landing.redis.UserSession;
+import com.azia.landing.redis.UserSessionRedisRepository;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

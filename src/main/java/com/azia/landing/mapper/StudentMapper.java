@@ -22,10 +22,7 @@ public interface StudentMapper {
         return Optional.ofNullable(image).isPresent() ?
                 ImageDto.builder()
                         .id(image.getId())
-                        .name(image.getName())
-                        .ext(image.getExt())
                         .path(image.getPath())
-                        .data(Files.readAllBytes(Path.of(image.getPath())))
                         .build()
                 : null;
     }

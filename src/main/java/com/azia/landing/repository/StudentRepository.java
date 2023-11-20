@@ -10,10 +10,6 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 
-    boolean existsStudentByIdAndImageIsNull(Integer id);
-    @Query("select s.image.name from Student s where s.id = :id")
-    String getStudentImageName(Integer id);
-
     @Query("""
     select s from Student s where (:second is null and (s.firstName ilike :first% or s.lastName ilike :first%))
     or (s.firstName ilike :first% and s.lastName ilike :second%)

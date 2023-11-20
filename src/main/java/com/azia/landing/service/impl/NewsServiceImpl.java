@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.azia.landing.helper.ResponseEntityHelper.*;
+import static com.azia.landing.util.ImageUtil.IMAGE_PATH;
 import static com.azia.landing.util.ImageUtil.buildImage;
 
 @RequiredArgsConstructor
@@ -98,7 +99,7 @@ public class NewsServiceImpl implements NewsService {
         try {
             if(newsOptional.isEmpty())
                 return NOT_FOUND();
-            Files.delete(Path.of(newsOptional.get().getImage().getPath()));
+            Files.delete(Path.of(IMAGE_PATH + "/" + newsOptional.get().getImage().getPath()));
             newsRepository.delete(newsOptional.get());
             return OK_MESSAGE();
         }catch (Exception e){

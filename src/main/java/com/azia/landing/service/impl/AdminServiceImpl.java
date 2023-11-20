@@ -82,7 +82,7 @@ public class AdminServiceImpl implements AdminService {
         User user = admin.getUser();
         UserDto userDto = adminDto.getUser();
         user.setEmail(adminDto.getUser().getEmail());
-        if(userDto.getPassword() != null)
+        if(userDto.getPassword().length() > 0)
             user.setPassword(encoder.encode(userDto.getPassword()));
         admin.setUser(user);
     }

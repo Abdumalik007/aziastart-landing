@@ -8,8 +8,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring")
@@ -24,10 +22,7 @@ public interface NewsMapper {
         return Optional.ofNullable(image).isPresent() ?
                 ImageDto.builder()
                         .id(image.getId())
-                        .name(image.getName())
-                        .ext(image.getExt())
                         .path(image.getPath())
-                        .data(Files.readAllBytes(Path.of(image.getPath())))
                         .build()
                 : null;
     }

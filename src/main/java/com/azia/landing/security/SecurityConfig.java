@@ -1,8 +1,8 @@
 package com.azia.landing.security;
 
-import food.system.security.handler.CustomAccessDeniedHandler;
-import food.system.security.handler.CustomEntryPoint;
-import food.system.security.jwt.JwtFilter;
+import com.azia.landing.security.handler.CustomAccessDeniedHandler;
+import com.azia.landing.security.handler.CustomEntryPoint;
+import com.azia.landing.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

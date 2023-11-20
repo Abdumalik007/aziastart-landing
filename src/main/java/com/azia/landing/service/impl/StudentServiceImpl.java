@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.azia.landing.helper.ResponseEntityHelper.*;
+import static com.azia.landing.util.ImageUtil.IMAGE_PATH;
 import static com.azia.landing.util.ImageUtil.buildImage;
 
 
@@ -112,7 +113,7 @@ public class StudentServiceImpl implements StudentService {
             if(studentOptional.isEmpty())
                 return NOT_FOUND();
             studentRepository.delete(studentOptional.get());
-            Files.delete(Path.of(studentOptional.get().getImage().getPath()));
+            Files.delete(Path.of(IMAGE_PATH + "/" + studentOptional.get().getImage().getPath()));
             return OK_MESSAGE();
         }catch (Exception e){
             logger.error("Error while removing students: ".concat(e.getMessage()));

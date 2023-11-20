@@ -7,7 +7,7 @@ import com.azia.landing.redis.UserSession;
 import com.azia.landing.redis.UserSessionRedisRepository;
 import com.azia.landing.repository.UserRepository;
 import com.azia.landing.role.Role;
-import com.azia.landing.security.jwt.JwtService;
+import com.azia.landing.security.jwt.JwtUtil;
 import com.azia.landing.service.main.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserSessionRedisRepository redisRepository;
-    private final JwtService jwtService;
+    private final JwtUtil jwtService;
 
 
     @Override
